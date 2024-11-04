@@ -21,6 +21,12 @@ function App() {
   function clearInput() {
     setScreenValue('0');
   }
+
+  function allClear() {
+    setScreenValue('0');
+    setPreviousOperator('');
+    setPreviousValue('');
+  }
   
   function operatorPressed(operator) {
     setPreviousValue(screenValue);
@@ -60,7 +66,7 @@ function App() {
         <div id="button_box">
             <table>
                 <tr>
-                    <td><input id="AC" type="button" value="AC" class="round_button calc_operation"/></td>
+                    <td><input id="AC" type="button" value="AC" class="round_button calc_operation" onClick={() => allClear()}/></td>
                     <td><input id="C" type="button" value="C" class="round_button calc_operation" onClick={() => clearInput()}/></td>
                     <td><input id="modulus" type="button" value="%" class="round_button calc_operation" onClick={() => operatorPressed('%')} /></td>
                     <td><input id="divide" type="button" value="÷" class="round_button airthmetic_operation" onClick={() => operatorPressed('/')}/></td>
