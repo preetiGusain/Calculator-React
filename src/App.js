@@ -1,101 +1,104 @@
 import { useState } from 'react';
 import './App.css';
-import Screen from "./Screen";
+import Screen from "./components/Screen";
+import NumButton from './components/button/NumButton';
+import ACButton from './components/button/ACButton';
+import ClearButton from './components/button/ClearButton';
+import ArithmeticButton from './components/button/ArithmeticButton';
 
 function App() {
 
   const [previousValue, setPreviousValue] = useState('');
   const [previousOperator, setPreviousOperator] = useState('');
-
-
-  const [screenValue, setScreenValue ] = useState('0');
+  const [screenValue, setScreenValue] = useState('0');
 
   function takeInput(input) {
-    if(screenValue=='0') {
+    if (screenValue == '0') {
       setScreenValue(input);
     } else {
       setScreenValue(screenValue + input);
     }
   }
 
-  function clearInput() {
-    setScreenValue('0');
-  }
-
-  function allClear() {
-    setScreenValue('0');
-    setPreviousOperator('');
-    setPreviousValue('');
-  }
-  
   function operatorPressed(operator) {
-    setPreviousValue(screenValue);
+    if (previousOperator !== '') {
+      const temp = calc();
+      setPreviousValue(String(temp));
+    } else {
+      setPreviousValue(screenValue);
+    }
     setPreviousOperator(operator);
     setScreenValue('0');
   }
 
   function result() {
-    let temp = 0;
-    const currInt = parseInt(screenValue);
-    const prevInt = parseInt(previousValue);
-    if(previousOperator == ''){
-      return;
-    }
-    if(previousOperator == '%'){
-      temp = prevInt % currInt;
-    }
-    if(previousOperator == '/'){
-      temp = prevInt / currInt;
-    }
-    if(previousOperator == '*'){
-      temp = prevInt * currInt;
-    }
-    if(previousOperator == '+'){
-      temp = prevInt + currInt;
-    }
-    if(previousOperator == '-'){
-      temp = prevInt - currInt;
-    }
+    let temp = calc();
     setScreenValue(String(temp));
     setPreviousOperator('');
     setPreviousValue('');
   }
+
+  function calc() {
+    let temp = 0;
+    const currInt = parseInt(screenValue);
+    const prevInt = parseInt(previousValue);
+    if (previousOperator == '') {
+      return currInt;
+    }
+    if (previousOperator == '%') {
+      temp = prevInt % currInt;
+    }
+    if (previousOperator == '/') {
+      temp = prevInt / currInt;
+    }
+    if (previousOperator == '*') {
+      temp = prevInt * currInt;
+    }
+    if (previousOperator == '+') {
+      temp = prevInt + currInt;
+    }
+    if (previousOperator == '-') {
+      temp = prevInt - currInt;
+    }
+    return temp;
+  }
+
   return (
     <div id="box">
-        <Screen value={screenValue}/>
-        <div id="button_box">
-            <table>
-                <tr>
-                    <td><input id="AC" type="button" value="AC" class="round_button calc_operation" onClick={() => allClear()}/></td>
-                    <td><input id="C" type="button" value="C" class="round_button calc_operation" onClick={() => clearInput()}/></td>
-                    <td><input id="modulus" type="button" value="%" class="round_button calc_operation" onClick={() => operatorPressed('%')} /></td>
-                    <td><input id="divide" type="button" value="÷" class="round_button airthmetic_operation" onClick={() => operatorPressed('/')}/></td>
-                </tr>
-                <tr>
-                    <td><input id="seven" type="button" value="7" class="round_button" onClick={()=>takeInput("7")}/></td>
-                    <td><input id="eight" type="button" value="8" class="round_button" onClick={()=>takeInput("8")}/></td>
-                    <td><input id="nine" type="button" value="9" class="round_button" onClick={()=>takeInput("9")}/></td>
-                    <td><input id="multiply" type="button" value="x" class="round_button airthmetic_operation" onClick={() => operatorPressed('*')}/></td>
-                </tr>
-                <tr>
-                    <td><input id="four" type="button" value="4" class="round_button" onClick={()=>takeInput("4")}/></td>
-                    <td><input id="five" type="button" value="5" class="round_button" onClick={()=>takeInput("5")}/></td>
-                    <td><input id="six" type="button" value="6" class="round_button" onClick={()=>takeInput("6")}/></td>
-                    <td><input id="subtract" type="button" value="-" class="round_button airthmetic_operation" onClick={() => operatorPressed('-')}/></td>
-                </tr>
-                <tr>
-                    <td><input id="one" type="button" value="1" class="round_button" onClick={()=>takeInput("1")}/></td>
-                    <td><input id="two" type="button" value="2" class="round_button" onClick={()=>takeInput("2")}/></td>
-                    <td><input id="three" type="button" value="3" class="round_button" onClick={()=>takeInput("3")}/></td>
-                    <td><input id="add" type="button" value="+" class="round_button airthmetic_operation" onClick={() => operatorPressed('+')}/></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><input id="zero" type="button" value="0" class="round_button" onClick={()=>takeInput("0")}/></td>
-                    <td colspan="2"><input id="equals" type="button" value="="
-                            class="round_button airthmetic_operation" onClick={() => result()}/></td>
-                </tr>
-            </table>
-        </div>
+      <Screen value={screenValue} />
+      <div id="button_box">
+        <table>
+          <tr>
+            <ACButton setPreviousOperator={setPreviousOperator} setPreviousValue={setPreviousValue} setScreenValue={setScreenValue}/>
+            <ClearButton setScreenValue={setScreenValue}/>
+            <ArithmeticButton value={"%"} operatorPressed={operatorPressed}/>
+            <ArithmeticButton value={"/"} operatorPressed={operatorPressed}/>
+          </tr>
+          <tr>
+            <NumButton value={"7"} takeInput={takeInput} />
+            <NumButton value={"8"} takeInput={takeInput} />
+            <NumButton value={"9"} takeInput={takeInput} />
+            <ArithmeticButton value={"*"} operatorPressed={operatorPressed}/>
+          </tr>
+          <tr>
+            <NumButton value={"4"} takeInput={takeInput} />
+            <NumButton value={"5"} takeInput={takeInput} />
+            <NumButton value={"6"} takeInput={takeInput} />
+            <ArithmeticButton value={"-"} operatorPressed={operatorPressed}/>
+          </tr>
+          <tr>
+            <NumButton value={"1"} takeInput={takeInput} />
+            <NumButton value={"2"} takeInput={takeInput} />
+            <NumButton value={"3"} takeInput={takeInput} />
+            <ArithmeticButton value={"+"} operatorPressed={operatorPressed}/>
+          </tr>
+          <tr>
+            <td colspan="2"><input id="zero" type="button" value="0" class="round_button" onClick={() => takeInput("0")} /></td>
+            <td colspan="2"><input id="equals" type="button" value="="
+              class="round_button airthmetic_operation" onClick={() => result()} /></td>
+          </tr>
+        </table>
+      </div>
     </div>
   );
 }
