@@ -65,7 +65,7 @@ function App() {
         headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify({ num1: Number(num1), num2: Number(num2) }),
       });
-      const data = await response.text();
+      const data = await response.json();
       setScreenValue(data);
     } catch (error) {
         console.error("Calculation error", error);
