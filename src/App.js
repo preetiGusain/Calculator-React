@@ -32,36 +32,26 @@ function App() {
   }
 
   function result() {
-    let temp = calc();
-    setScreenValue(String(temp));
-    setPreviousOperator('');
-    setPreviousValue('');
+    if(previousOperator != '') {
+      calc(previousValue, screenValue, previousOperator);
+      setPreviousOperator('');
+      setPreviousValue('');
+    }
   }
 
-  function calc() {
-    let temp = 0;
-    const currInt = parseInt(screenValue);
-    const prevInt = parseInt(previousValue);
-    if (previousOperator == '') {
-      return currInt;
+  const calc  = async (num1, num2 , operator) => {
+    try {
+      const response = await fetch(`https://calculator-api-pnqu.onrender.com/${operator}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify({ num1: Number(num1), num2: Number(num2) }),
+      });
+      const data = await response.text();
+      setScreenValue(data);
+    } catch (error) {
+        console.error("Calculation error", error);
     }
-    if (previousOperator == '%') {
-      temp = prevInt % currInt;
-    }
-    if (previousOperator == '/') {
-      temp = prevInt / currInt;
-    }
-    if (previousOperator == '*') {
-      temp = prevInt * currInt;
-    }
-    if (previousOperator == '+') {
-      temp = prevInt + currInt;
-    }
-    if (previousOperator == '-') {
-      temp = prevInt - currInt;
-    }
-    return temp;
-  }
+  };
 
   return (
     <div id="box">
