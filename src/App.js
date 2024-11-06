@@ -59,8 +59,8 @@ function App() {
 
   const calc  = async (num1, num2 , operator) => {
     try {
-      const operator = getOperator(operator);
-      const response = await fetch(`https://calculator-api-pnqu.onrender.com/${operator}`, {
+      const endpoint = getOperator(operator);
+      const response = await fetch(`https://calculator-api-pnqu.onrender.com/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify({ num1: Number(num1), num2: Number(num2) }),
