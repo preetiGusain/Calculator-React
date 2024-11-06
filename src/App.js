@@ -12,6 +12,24 @@ function App() {
   const [previousOperator, setPreviousOperator] = useState('');
   const [screenValue, setScreenValue] = useState('0');
 
+  //Mapping arithmetic symbols to their endpoints
+  function getOperator(operator) {
+    switch(operator) {
+      case '+':
+        return 'add';
+      case '-':
+        return 'subtract';
+      case '*':
+        return 'multiply';
+      case '/':
+        return 'divide';
+      case '%':
+        return 'mod';
+      default:
+        return '';
+    }
+  }
+
   function takeInput(input) {
     if (screenValue == '0') {
       setScreenValue(input);
@@ -41,6 +59,7 @@ function App() {
 
   const calc  = async (num1, num2 , operator) => {
     try {
+      const operator = getOperator(operator);
       const response = await fetch(`https://calculator-api-pnqu.onrender.com/${operator}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
